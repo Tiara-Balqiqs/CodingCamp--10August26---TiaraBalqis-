@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pomodoro Tools</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       GREETING SECTION
+       IDs: greeting-time, greeting-message, greeting-date
+       ============================================================ -->
+  <header class="greeting-section">
+    <p id="greeting-message" class="greeting-message">Good morning, mrs Tiara ☀️</p>
+    <h1 id="greeting-time" class="greeting-time">12:00 AM</h1>
+    <p id="greeting-date" class="greeting-date">Thursday, 1 January 2026</p>
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT GRID
+       ============================================================ -->
+  <main class="main-grid">
+
+    <!-- ── FOCUS TIMER ── -->
+    <section class="card card--timer" aria-labelledby="timer-heading">
+      <h2 id="timer-heading" class="card__title">Focus Timer</h2>
+
+      <!-- SVG progress ring -->
+      <div class="timer-ring-wrapper" aria-hidden="true">
+        <svg class="timer-ring" viewBox="0 0 200 200" width="200" height="200">
+          <!-- Background track -->
+          <circle
+            class="ring-track"
+            cx="100" cy="100" r="88"
+            fill="none"
+            stroke-width="10"
+          />
+          <!-- Animated progress ring -->
+          <circle
+            id="ring-progress"
+            class="ring-progress"
+            cx="100" cy="100" r="88"
+            fill="none"
+            stroke-width="10"
+            stroke-linecap="round"
+            transform="rotate(-90 100 100)"
+          />
+        </svg>
+
+        <!-- Digits overlay -->
+        <div class="timer-display" aria-live="off">
+          <span id="timer-minutes" class="timer-digits">25</span>
+          <span class="timer-colon">:</span>
+          <span id="timer-seconds" class="timer-digits">00</span>
+        </div>
+      </div>
+
+      <!-- Status message -->
+      <p id="timer-status" class="timer-status" aria-live="polite">Ready To Study?</p>
+
+      <!-- Controls -->
+      <div class="timer-controls">
+        <button id="btn-start-stop" class="btn btn--primary" aria-label="Start timer">Start</button>
+        <button id="btn-stop"       class="btn btn--secondary" aria-label="Stop timer">Stop</button>
+        <button id="btn-reset"      class="btn btn--ghost"     aria-label="Reset timer">Reset</button>
+      </div>
+    </section>
+
+    <!-- ── TO-DO LIST ── -->
+    <section class="card card--tasks" aria-labelledby="tasks-heading">
+      <h2 id="tasks-heading" class="card__title">Task</h2>
+
+      <!-- Add task form -->
+      <form id="task-form" class="task-form" novalidate>
+        <input
+          id="task-input"
+          class="text-input"
+          type="text"
+          placeholder="Add a new task…"
+          maxlength="120"
+          autocomplete="off"
+          aria-label="New task"
+        />
+        <button type="submit" class="btn btn--primary">Add</button>
+      </form>
+
+      <!-- Task list -->
+      <ul id="task-list" class="task-list" aria-live="polite" aria-label="Task list"></ul>
+
+      <!-- Empty state -->
+      <p id="tasks-empty" class="empty-state">No tasks yet. Add one above!</p>
+    </section>
+
+    <!-- ── QUICK LINKS ── -->
+    <section class="card card--links" aria-labelledby="links-heading">
+      <h2 id="links-heading" class="card__title">Quick Links</h2>
+
+      <!-- Add link form -->
+      <form id="link-form" class="link-form" novalidate>
+        <input
+          id="link-name-input"
+          class="text-input"
+          type="text"
+          placeholder="Label (e.g. YouTube)"
+          maxlength="40"
+          autocomplete="off"
+          aria-label="Link label"
+        />
+        <input
+          id="link-url-input"
+          class="text-input"
+          type="url"
+          placeholder="URL (e.g. youtube.com)"
+          maxlength="200"
+          autocomplete="off"
+          aria-label="Link URL"
+        />
+        <button type="submit" class="btn btn--primary">Save</button>
+      </form>
+
+      <!-- Links grid -->
+      <div id="link-grid" class="link-grid" aria-label="Saved links"></div>
+
+      <!-- Empty state -->
+      <p id="links-empty" class="empty-state">No links yet. Add one above!</p>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       MODAL OVERLAY
+       IDs: modal-overlay, modal-heading, modal-body,
+            modal-save, modal-cancel
+       ============================================================ -->
+  <div id="modal-overlay" class="overlay overlay--hidden" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
+    <div class="modal">
+      <h3 id="modal-heading" class="modal__heading">Edit</h3>
+      <div id="modal-body" class="modal__body"></div>
+      <div class="modal__footer">
+        <button id="modal-save"   class="btn btn--primary">Save</button>
+        <button id="modal-cancel" class="btn btn--ghost">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TOAST NOTIFICATION
+       IDs: toast, toast-text
+       ============================================================ -->
+  <div id="toast" class="toast toast--hidden" role="status" aria-live="polite">
+    <span id="toast-text"></span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

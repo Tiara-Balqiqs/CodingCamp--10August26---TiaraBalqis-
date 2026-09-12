@@ -1,0 +1,681 @@
+/* ============================================================
+   POMODORO TOOLS — style.css
+   Design tokens → Base reset → Layout → Components
+   ============================================================ */
+
+/* ── Design Tokens ── */
+:root {
+  /* Palette */
+  --clr-bg:           #0f0f14;
+  --clr-surface:      #1a1a24;
+  --clr-surface-2:    #22222f;
+  --clr-border:       #2e2e3e;
+  --clr-accent:       #e8624a;
+  --clr-accent-hover: #f07560;
+  --clr-accent-soft:  rgba(232, 98, 74, 0.15);
+  --clr-text:         #f0ede8;
+  --clr-text-muted:   #8888a0;
+  --clr-text-done:    #55556a;
+  --clr-success:      #4caf82;
+  --clr-danger:       #e85050;
+
+  /* Timer ring */
+  --clr-ring-track:   #2e2e3e;
+  --clr-ring-fill:    #e8624a;
+
+  /* Typography */
+  --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+
+  /* Spacing */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  40px;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.35);
+  --shadow-btn:  0 2px 8px  rgba(232, 98, 74, 0.3);
+
+  /* Transitions */
+  --ease: 200ms ease;
+}
+
+/* ============================================================
+   BASE RESET
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--clr-bg);
+  color: var(--clr-text);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  min-height: 100vh;
+  padding: var(--space-lg) var(--space-md) var(--space-xl);
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+input, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ============================================================
+   GREETING SECTION
+   ============================================================ */
+.greeting-section {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md) var(--space-lg);
+  max-width: 600px;
+  margin: 0 auto var(--space-xl);
+}
+
+.greeting-message {
+  font-size: 1.1rem;
+  color: var(--clr-text-muted);
+  letter-spacing: 0.02em;
+  margin-bottom: var(--space-xs);
+}
+
+.greeting-time {
+  font-family: var(--font-mono);
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--clr-text);
+  line-height: 1.1;
+}
+
+.greeting-date {
+  margin-top: var(--space-sm);
+  font-size: 0.95rem;
+  color: var(--clr-text-muted);
+}
+
+/* ============================================================
+   MAIN GRID
+   ============================================================ */
+.main-grid {
+  display: grid;
+  gap: var(--space-lg);
+  max-width: 1100px;
+  margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  align-items: start;
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+.card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.card__title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clr-text-muted);
+  margin-bottom: var(--space-lg);
+}
+
+/* ============================================================
+   FOCUS TIMER
+   ============================================================ */
+.card--timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+/* Ring wrapper — SVG + digit overlay stacked */
+.timer-ring-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.timer-ring {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.ring-track {
+  stroke: var(--clr-ring-track);
+}
+
+.ring-progress {
+  stroke: var(--clr-ring-fill);
+  stroke-dasharray: 552.92;           /* 2π × 88 */
+  stroke-dashoffset: 0;               /* JS controls this */
+  transition: stroke-dashoffset 1s linear;
+}
+
+/* Digit overlay centered inside ring */
+.timer-display {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.timer-digits {
+  font-family: var(--font-mono);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  line-height: 1;
+  min-width: 2ch;
+  text-align: center;
+}
+
+.timer-colon {
+  font-family: var(--font-mono);
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--clr-text-muted);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.timer-status {
+  font-size: 0.9rem;
+  color: var(--clr-text-muted);
+  min-height: 1.4em;
+  text-align: center;
+}
+
+.timer-controls {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  transition: background var(--ease), color var(--ease),
+              transform var(--ease), box-shadow var(--ease);
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+/* Primary — filled accent */
+.btn--primary {
+  background: var(--clr-accent);
+  color: #fff;
+  box-shadow: var(--shadow-btn);
+}
+
+.btn--primary:hover,
+.btn--primary:focus-visible {
+  background: var(--clr-accent-hover);
+}
+
+/* Secondary — outlined */
+.btn--secondary {
+  background: transparent;
+  color: var(--clr-text-muted);
+  border: 1px solid var(--clr-border);
+}
+
+.btn--secondary:hover,
+.btn--secondary:focus-visible {
+  border-color: var(--clr-text-muted);
+  color: var(--clr-text);
+}
+
+/* Ghost — subtle fill */
+.btn--ghost {
+  background: var(--clr-surface-2);
+  color: var(--clr-text-muted);
+}
+
+.btn--ghost:hover,
+.btn--ghost:focus-visible {
+  background: var(--clr-border);
+  color: var(--clr-text);
+}
+
+/* Focus outline for accessibility */
+.btn:focus-visible {
+  outline: 2px solid var(--clr-accent);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   TEXT INPUT (shared by tasks and links)
+   ============================================================ */
+.text-input {
+  width: 100%;
+  padding: 9px 14px;
+  background: var(--clr-surface-2);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  color: var(--clr-text);
+  outline: none;
+  transition: border-color var(--ease), box-shadow var(--ease);
+}
+
+.text-input::placeholder {
+  color: var(--clr-text-muted);
+  opacity: 0.7;
+}
+
+.text-input:focus {
+  border-color: var(--clr-accent);
+  box-shadow: 0 0 0 3px var(--clr-accent-soft);
+}
+
+/* ============================================================
+   TO-DO LIST
+   ============================================================ */
+.card--tasks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.task-form {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.task-form .text-input {
+  flex: 1;
+}
+
+/* Task list */
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 10px var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: var(--clr-surface-2);
+  border: 1px solid transparent;
+  transition: border-color var(--ease);
+}
+
+.task-item:hover {
+  border-color: var(--clr-border);
+}
+
+/* Checkbox-style toggle button */
+.task-check {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--clr-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #fff;
+  transition: background var(--ease), border-color var(--ease);
+}
+
+.task-check:hover {
+  border-color: var(--clr-accent);
+}
+
+.task-check--done {
+  background: var(--clr-success);
+  border-color: var(--clr-success);
+}
+
+/* Task text */
+.task-text {
+  flex: 1;
+  font-size: 0.95rem;
+  color: var(--clr-text);
+  word-break: break-word;
+  transition: color var(--ease);
+}
+
+.task-text--done {
+  color: var(--clr-text-done);
+  text-decoration: line-through;
+}
+
+/* Edit / delete icon buttons */
+.task-actions {
+  display: flex;
+  gap: var(--space-xs);
+  opacity: 0;
+  transition: opacity var(--ease);
+}
+
+.task-item:hover .task-actions,
+.task-item:focus-within .task-actions {
+  opacity: 1;
+}
+
+.icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--clr-text-muted);
+  transition: background var(--ease), color var(--ease);
+}
+
+.icon-btn:hover {
+  background: var(--clr-border);
+  color: var(--clr-text);
+}
+
+.icon-btn--danger:hover {
+  background: rgba(232, 80, 80, 0.15);
+  color: var(--clr-danger);
+}
+
+/* ============================================================
+   QUICK LINKS
+   ============================================================ */
+.card--links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.link-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.link-form .btn {
+  align-self: flex-start;
+}
+
+/* Links grid */
+.link-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.link-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background: var(--clr-surface-2);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-pill);
+  padding: 5px 6px 5px 10px;
+  transition: border-color var(--ease), background var(--ease);
+}
+
+.link-item:hover {
+  border-color: var(--clr-accent);
+  background: var(--clr-accent-soft);
+}
+
+.link-anchor {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.88rem;
+  color: var(--clr-text);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.link-anchor:hover {
+  color: var(--clr-accent);
+}
+
+.link-favicon {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.link-delete {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--clr-text-muted);
+  opacity: 0;
+  transition: opacity var(--ease), background var(--ease), color var(--ease);
+}
+
+.link-item:hover .link-delete {
+  opacity: 1;
+}
+
+.link-delete:hover {
+  background: var(--clr-border);
+  color: var(--clr-danger);
+}
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty-state {
+  font-size: 0.88rem;
+  color: var(--clr-text-muted);
+  text-align: center;
+  padding: var(--space-md) 0;
+  font-style: italic;
+}
+
+/* ============================================================
+   MODAL OVERLAY
+   ============================================================ */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  z-index: 100;
+  transition: opacity var(--ease);
+}
+
+.overlay--hidden {
+  display: none;
+}
+
+.modal {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.modal__heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--clr-text);
+}
+
+.modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.modal__label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--clr-text-muted);
+}
+
+.modal__footer {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+}
+
+/* ============================================================
+   TOAST NOTIFICATION
+   ============================================================ */
+.toast {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--clr-surface-2);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-pill);
+  padding: 10px 22px;
+  font-size: 0.88rem;
+  color: var(--clr-text);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  z-index: 200;
+  white-space: nowrap;
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.toast--hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(8px);
+}
+
+/* ============================================================
+   SCROLLBAR (Webkit)
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--clr-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--clr-border);
+  border-radius: var(--radius-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--clr-text-muted);
+}
+
+/* ============================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================ */
+@media (max-width: 640px) {
+  body {
+    padding: var(--space-md) var(--space-sm) var(--space-xl);
+  }
+
+  .greeting-section {
+    padding: var(--space-lg) var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .task-form {
+    flex-direction: column;
+  }
+
+  .task-form .btn {
+    align-self: flex-end;
+  }
+
+  .timer-controls {
+    gap: var(--space-xs);
+  }
+
+  .btn {
+    padding: 8px 14px;
+  }
+
+  .toast {
+    white-space: normal;
+    text-align: center;
+    max-width: calc(100vw - 2 * var(--space-md));
+  }
+}
